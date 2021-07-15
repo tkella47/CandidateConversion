@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cli:ClientConfig xmlns:cli="http://www.taleo.com/ws/integration/client">
+    <cli:Global>
+        <cli:General>
+            <cli:ConfigurationIdentifier>Batch1</cli:ConfigurationIdentifier>
+            <cli:WorkflowIdentifier>
+                <cli:Template>ResumeWF-[NOW]</cli:Template>
+            </cli:WorkflowIdentifier>
+            <cli:Type>T-SOAP</cli:Type>
+            <cli:Communication>PRODUCT</cli:Communication>
+            <cli:ProductCode>RC1704</cli:ProductCode>
+            <cli:TSOAPFormatVersion>210</cli:TSOAPFormatVersion>
+            <cli:RequestMessage>
+                <cli:File>
+                    <cli:SpecificFile>[TCC_SCRIPT_DIR]\Batch1_sq.xml</cli:SpecificFile>
+                </cli:File>
+                <cli:Format>SQ-XML</cli:Format>
+                <cli:Encoding>UTF-8</cli:Encoding>
+            </cli:RequestMessage>
+            <cli:ResponseMessage>
+                <cli:File>
+                    <cli:GeneratedFile>
+                        <cli:Folder>[DATA_OUTPUT_DIR]</cli:Folder>
+                        <cli:FileName>
+                            <cli:Template>Resume_[NOW]</cli:Template>
+                        </cli:FileName>
+                    </cli:GeneratedFile>
+                </cli:File>
+                <cli:Format>XML</cli:Format>
+                <cli:Encoding>UTF-8</cli:Encoding>
+            </cli:ResponseMessage>
+            <cli:DeleteTemporaryFiles>false</cli:DeleteTemporaryFiles>
+        </cli:General>
+        <cli:Monitoring>
+            <cli:Folder>monitor</cli:Folder>
+            <cli:FileName>
+                <cli:WorkflowIdentifier/>
+            </cli:FileName>
+            <cli:Type>
+                <cli:HTML/>
+            </cli:Type>
+        </cli:Monitoring>
+        <cli:Alerting>
+            <cli:Transports>
+                <cli:Email>
+                    <cli:Host>INSERT MAIL HOST</cli:Host>
+                    <cli:Port>25</cli:Port>
+                </cli:Email>
+            </cli:Transports>
+            <cli:OnError/>
+            <cli:OnComplete/>
+        </cli:Alerting>
+        <cli:Board>
+            <cli:BaseBoard/>
+            <cli:Symbols>
+                <cli:Symbol name="DATA_OUTPUT_DIR">C:\Pilot\ResumeConv\PilotResumes\Resume\Batch1\Data</cli:Symbol>
+                <ns0:Symbol name="ATTACHMENTS_OUTPUT_DIR" xmlns:ns0="http://www.taleo.com/ws/integration/client">C:\Pilot\ResumeConv\PilotResumes\Resume\Batch1\BlobFiles</ns0:Symbol>
+                <cli:Symbol name="TCC_SCRIPT_DIR">C:\Pilot\ResumeConv\TCCScripts\Batch1</cli:Symbol>
+                <cli:Symbol name="TEMPLATE_DIR">C:\Pilot\ResumeConv\TCCScripts</cli:Symbol>
+            </cli:Symbols>
+        </cli:Board>
+    </cli:Global>
+    <cli:Steps>
+        <cli:PreProcess>
+            <ns0:PrepareQuery xmlns:ns0="http://www.taleo.com/ws/integration/client"/>
+            <ns0:WrapSoap xmlns:ns0="http://www.taleo.com/ws/integration/client">
+                <ns0:WorkflowIdentifier/>
+                <ns0:Action>http://www.taleo.com/ws/integration/toolkit/2005/07/action/export</ns0:Action>
+            </ns0:WrapSoap>
+        </cli:PreProcess>
+        <cli:Process>
+            <cli:Send>
+                <cli:Endpoint source="DEFAULT"/>
+                <cli:Quality/>
+                <cli:Validate>false</cli:Validate>
+            </cli:Send>
+            <cli:Poll>
+                <cli:Endpoint source="DEFAULT"/>
+                <cli:Quality/>
+            </cli:Poll>
+            <cli:Retrieve>
+                <cli:Endpoint source="DEFAULT"/>
+                <cli:Quality/>
+            </cli:Retrieve>
+        </cli:Process>
+        <cli:PostProcess>
+            <cli:TransformXSL>
+                <cli:ExportMode>XML</cli:ExportMode>
+                <cli:ResponseFormat>XML</cli:ResponseFormat>
+                <cli:XSLFile>[TEMPLATE_DIR]\AttachmentExportTransformD.xsl</cli:XSLFile>
+                <cli:TemplateOutFile>[TEMPLATE_DIR]\CandidateAttachmentExportTemplate.xml</cli:TemplateOutFile>
+            </cli:TransformXSL>
+            <ns0:CustomStep xmlns:ns0="http://www.taleo.com/ws/integration/client">
+                <ns0:JavaClass>com.taleo.integration.client.customstep.xml.ExtractAttachedFilePostStep</ns0:JavaClass>
+                <ns0:Parameters>
+                    <ns0:Parameter>
+                        <ns0:Name>active</ns0:Name>
+                        <ns0:Value>true</ns0:Value>
+                    </ns0:Parameter>
+                    <ns0:Parameter>
+                        <ns0:Name>filenameXPath</ns0:Name>
+                        <ns0:Value>file/@path</ns0:Value>
+                    </ns0:Parameter>
+                    <ns0:Parameter>
+                        <ns0:Name>contentXPath</ns0:Name>
+                        <ns0:Value>file/content</ns0:Value>
+                    </ns0:Parameter>
+                    <ns0:Parameter>
+                        <ns0:Name>outputDirectoryXPath</ns0:Name>
+                        <ns0:Value>'[ATTACHMENTS_OUTPUT_DIR]'</ns0:Value>
+                    </ns0:Parameter>
+                    <ns0:Parameter>
+                        <ns0:Name>recordXPath</ns0:Name>
+                        <ns0:Value>/files/file</ns0:Value>
+                    </ns0:Parameter>
+                </ns0:Parameters>
+            </ns0:CustomStep>
+        </cli:PostProcess>
+    </cli:Steps>
+</cli:ClientConfig>

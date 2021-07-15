@@ -1,0 +1,13 @@
+import os
+print("*****Installing dependencies*****")
+os.system('cmd /c "python -m pip install --upgrade pip"')
+os.system('cmd /c "pip install wheel"')
+os.system('cmd /c "pip install pandas"')
+os.system('cmd /c "pip install numpy"')
+os.system('cmd /c "pip install argparse"')
+os.system('cmd /c "pip install pathlib"')
+os.system('cmd /c "pip install wheel"')
+os.system('cmd /c "pip install docx"')
+os.system('cmd /c "pip install docx2pdf"')
+os.system('cmd /c "pip install xlsxwriter"')
+print("*****Complete*****")

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quer:query productCode="RC1704" model="http://www.taleo.com/ws/tee800/2009/01" projectedClass="Candidate" locale="en" alias="mainQuery" mode="XML" largegraph="true" preventDuplicates="false" xmlns:quer="http://www.taleo.com/ws/integration/query">
+    <quer:subQueries/>
+    <quer:projections>
+        <quer:projection alias="CandidateID"><quer:field path="Number"/>
+        </quer:projection>
+        <quer:projection>
+            <quer:field path="FirstName"/>
+        </quer:projection>
+        <quer:projection alias="FI">
+            <quer:substring>
+                <quer:field path="FirstName"/>
+                <quer:integer>1</quer:integer>
+                <quer:integer>1</quer:integer>
+            </quer:substring>
+        </quer:projection>
+        <quer:projection>
+            <quer:field path="LastName"/>
+        </quer:projection>
+        <quer:projection alias="AttachmentFileName">
+            <quer:field path="AttachedFiles,FileName"/>
+        </quer:projection>
+        <quer:projection alias="AttachmentTypeCode">
+            <quer:field path="AttachedFiles,AttachmentType,Code"/>
+        </quer:projection>
+        <quer:projection alias="AttachmentFileContent">
+            <quer:field path="AttachedFiles,FileContent"/>
+        </quer:projection>
+        <quer:projection alias="DocNumber">
+            <quer:field path="AttachedFiles,Number"/>
+        </quer:projection>
+    </quer:projections>
+    <quer:projectionFilterings/>
+    <quer:filterings>
+        <quer:filtering>
+            <quer:includedIn>
+                <quer:field path="AttachedFiles,Number"/>
+                 <quer:list>
+                </quer:list>
+            </quer:includedIn>
+        </quer:filtering>
+    </quer:filterings>
+    <quer:sortings>
+        <quer:sorting ascending="false">
+            <quer:field path="Number"/>
+        </quer:sorting>
+        <quer:sorting ascending="true">
+            <quer:field path="AttachedFiles,CreationDate"/>
+        </quer:sorting>
+    </quer:sortings>
+    <quer:sortingFilterings/>
+    <quer:groupings/>
+    <quer:joinings/>
+</quer:query>
