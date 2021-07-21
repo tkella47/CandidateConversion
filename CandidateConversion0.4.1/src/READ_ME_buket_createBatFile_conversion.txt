@@ -79,7 +79,12 @@ conversion.py    [type -h for help]
     ------/Resume2.docx
     ----/Data
     ------/ResumeInfo123.xml
-     
+    
+    HCM_Candidate_Map.csv Structure:
+    Please ensure that the taleo Id column is labelled as "Taleo CandidateID"
+    Please ensure that the Oracle Candidate Number Column is labelled as "Oracle CandNum"
+    --Note: Will add future functionality to allow users to pick the columns to serve as the Taleo CandidateId and Oracle CandNum"
+
     TO RUN:
         Navigate to src folder
         Surround optional argument 1 with quotes
