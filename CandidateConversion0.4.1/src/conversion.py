@@ -82,7 +82,7 @@ def error_wrap():
     print("Each batch folder should contain structure of Batch#: BlobFile [Folder with resume documents], candidate_info")
     raise Exception("Exiting wtih parsing with error: Translation file moved back to original destination")
 
-def writeCandidateInfo(path, df_obj):
+def writeCandidateInfo(path, df_obj,columns):
     #print(path)
     filenames = retrieve_file_paths(path+"/Data")
     xml_file = ""
@@ -113,7 +113,7 @@ def writeCandidateInfo(path, df_obj):
         df = df_obj.df
         #print("\n")
         #print(candidateId)
-        OrcCandID = df.loc[df["Taleo CandidateID"] == str(candidateId),"Oracle CandNum"]
+        OrcCandID = df.loc[df[columns[0]] == str(candidateId),columns[1]]
         if len(OrcCandID) == 0:
             #print("Match not found")
             #file.write("ID not contained in document:" + candidateId + "\n")
@@ -121,13 +121,9 @@ def writeCandidateInfo(path, df_obj):
             count +=1
         else:
             OrcCandID = OrcCandID.iloc[0]
-            if OrcCandID == "!NotFound!" or OrcCandID == "!NotConverted!":
+            if OrcCandID == "!NotFound!" or OrcCandID == "!NotConverted!" or "!" in OrcCandID or "#" in OrcCandID:
                 count += 1
-                #print("Match found, but oracle doesn't have the person")
-                if OrcCandID == "!NotFound!":
-                    file.write(candidateId + "\n")
-                else:
-                    file.write(candidateId + "\n")
+                file.write(candidateId + "\n")
             else:
                 candidateId = OrcCandID
                 resultString = "MERGE|Attachment|" + candidateId + "|FILE|IRC_CANDIDATE_RESUME|" + fileName + "|" + fileName + "|" + fileName + "\n"
@@ -156,6 +152,32 @@ def zipBatchFolder(path): #Compress Batch folder in to a zip folder.
             if fileCut != "":
                 zip_file.write(file,fileCut)
     zip_file.close()
+def selectColumns(file):
+    df = pd.read_csv(file)
+    #print(df.columns)
+    col_list = df.columns
+    taleo_col = None
+    oracle_col = None
+    while(taleo_col == None):
+        print(df.columns)
+        taleo_col = input("Enter Taleo ID column name: ")
+        print(taleo_col)
+        if taleo_col in col_list:
+            break
+        else:
+            print("column ",taleo_col," not found. Please enter a different column") 
+            taleo_col = None
+    while(oracle_col == None):
+        print(df.columns)
+        oracle_col = input("Enter Oracle ID column name: ")
+        print(oracle_col)
+        if oracle_col in col_list:
+            break
+        else:
+            print("column ",oracle_col," not found. Please enter a different column") 
+            oracle_col = None
+    columns = (taleo_col,oracle_col)
+    return columns
 
 
 if __name__ == "__main__":
@@ -193,6 +215,7 @@ if __name__ == "__main__":
     if not os.path.exists("HCM_Candidate_Map.csv"):
         shutil.move(argpath + "/HCM_Candidate_Map.csv" , cwd)
     translation_obj = TranslationFrame("HCM_Candidate_Map.csv")
+    columns = selectColumns("HCM_Candidate_Map.csv")
     #"""
     
     
@@ -216,7 +239,7 @@ if __name__ == "__main__":
             path = argpath + batch #path of batch folder
             #print(path)
             try:
-                writeCandidateInfo(path,translation_obj)#,translation_obj)
+                writeCandidateInfo(path,translation_obj, columns)#,translation_obj)
                 num +=1 #progress bar tracker
                
                 printProgressBar(num, len(raw_batches)*3, prefix = "Progress: ", suffix = "Complete || " + batch + "  ")

@@ -28,7 +28,7 @@ if __name__ == "__main__":
     requiredNamed.add_argument("-l","--log", help = "Path to where log files should be written during batch execution", required = True)
     args = parser.parse_args()
     launch_path = args.path
-    import_file_log_path = args.log
+    import_file_log_path = args.log # + "\" #LOG PATH HERE
     loops = args.number + 1 if args.number != 0 else 0
     #print(loops)
 
