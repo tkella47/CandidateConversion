@@ -25,7 +25,7 @@ buket.py     [type -h for help]
     ARGUMENTS: Buket takes 2 required arguments and 1 options
         Required Argument 1: -p/--path    : Path to ResumeValues.csv or equivalent file (Must contain file size and docuNumber)
         Required Argument 2: -s/--storage : Path to TCC data storage: Path will be written in the config files
-        Optional Argument 3: -l/--limit   : Data limit in MB: Default = 100 MB. In case Taleo TCC has data tranfer limits, allows batches to be broken up in to smaller sizes
+        Optional Argument 3: -l/--limit   : Data limit in MB: Default = 50 MB. In case Taleo TCC has data tranfer limits, allows batches to be broken up in to smaller sizes
     	Optional Argument 4: -n/--number  : Limit how many batches are created.
     TO RUN:
         Navigate to src folder
@@ -81,9 +81,8 @@ conversion.py    [type -h for help]
     ------/ResumeInfo123.xml
     
     HCM_Candidate_Map.csv Structure:
-    Please ensure that the taleo Id column is labelled as "Taleo CandidateID"
-    Please ensure that the Oracle Candidate Number Column is labelled as "Oracle CandNum"
-    --Note: Will add future functionality to allow users to pick the columns to serve as the Taleo CandidateId and Oracle CandNum"
+	Program will ask you to select the candidate mapping
+	HCM_Candidate_Map must have at least two columns to enable mapping
 
     TO RUN:
         Navigate to src folder
@@ -96,24 +95,15 @@ conversion.py    [type -h for help]
     AFTER EXECUTION:
         Zipped batches will be written in ../ORCBatch
         If an error occurs during the execution, the batch where the error occured will be skipped. 
-  resumeconvert.py [type -h for help]
-    PURPOSE: Converts .doc and .docx files to pdfs in order to try to overcome Oracle HCM Cloud issues with uploading zip files with certain elements in the .docx document
-        Note: Does not work for converting "skill bars"
-    ARGUMENTS
-    -p --path: Required: Path to folder with zipped batch files.
 
-    Output: Replaces batch zip with new zip of same name
-
-  halfer.py [type -h for help]
-    PURPOSE: Approximately halves the contents of a Resume zip file.
-    Note: May not work as well with small zip files.
-
-    ARGUMENTS
-    -p --path Required: Path to folder with zipped batch files (ignores all other files and directories present)
-
-    OUTPUT: Places original batch files in folder labelled previous. New batch folders contain A and B.
+In solutions folder:
+	resume-resave.py
+		PURPOSE:To resave any PDFs and covert doc/xs to PDFs
+		ARGUMENTS 1: -p/--path: Path to folder with failed batches
+		OUTPUT: Will output corrected zipfolders to same directory
+		
+		NOTE:You may see various errors on command line, that is okay.
 
       
-        
     
         
